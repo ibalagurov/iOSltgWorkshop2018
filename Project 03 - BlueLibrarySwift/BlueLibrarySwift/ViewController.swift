@@ -24,54 +24,64 @@ import UIKit
 
 class ViewController: UIViewController {
 
-  // MARK: - IBOutlet
-	@IBOutlet var dataTable: UITableView!
-	@IBOutlet var toolbar: UIToolbar!
-  @IBOutlet var scroller: HorizontalScrollerView!
-  
-  // MARK: - Private Variables
-  fileprivate var allAlbums = [Album]()
-  fileprivate var currentAlbumData: [AlbumData]?
-  fileprivate var currentAlbumIndex = 0
-  // use a stack to push and pop operation for the undo option
-  fileprivate var undoStack: [(Album, Int)] = []
-	
-  // MARK: - Lifecycle
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-    func setUI() {
-      navigationController?.navigationBar.isTranslucent = false
+    // MARK: - IBOutlet
+    @IBOutlet var dataTable: UITableView!
+    @IBOutlet var toolbar: UIToolbar!
+    @IBOutlet var scroller: HorizontalScrollerView!
+
+    // MARK: - Private Variables
+    fileprivate var allAlbums = [Album]()
+    fileprivate var currentAlbumData: [AlbumData]?
+    fileprivate var currentAlbumIndex = 0
+    // use a stack to push and pop operation for the undo option
+    fileprivate var undoStack: [(Album, Int)] = []
+
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+            
+        func setUI() {
+          navigationController?.navigationBar.isTranslucent = false
+        }
+        
+        func setData() {
+          currentAlbumIndex = 0
+          allAlbums = LibraryAPI.sharedInstance.getAlbums()
+        }
+        
+        func setComponents() {
+          dataTable.backgroundView = nil
+          loadPreviousState()
+          scroller.delegate = self
+          scroller.dataSource = self
+          reloadScroller()
+          scroller.scrollToView(at: currentAlbumIndex)
+          
+          let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action:Selector.undoAction)
+          undoButton.isEnabled = false;
+          let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target:nil, action:nil)
+          let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target:self, action:Selector.deleteAlbum)
+          let toolbarButtonItems = [undoButton, space, trashButton]
+          toolbar.setItems(toolbarButtonItems, animated: true)
+        }
+        
+        func addAccessibilityIdentifiers() {
+          dataTable.accessibilityIdentifier = "Albums information"
+          toolbar.accessibilityIdentifier = "Albums toolbar"
+          scroller.accessibilityIdentifier = "Albums scroller"
+        }
+            
+        addAccessibilityIdentifiers()
+        setUI()
+        setData()
+        setComponents()
+        showDataForAlbum(at: currentAlbumIndex)
+        
+        NotificationCenter.default.addObserver(
+            self, selector:Selector.saveCurrentState, name: NSNotification.Name.UIApplicationDidEnterBackground,
+            object: nil
+        )
     }
-    
-    func setData() {
-      currentAlbumIndex = 0
-      allAlbums = LibraryAPI.sharedInstance.getAlbums()
-    }
-    
-    func setComponents() {
-      dataTable.backgroundView = nil
-      loadPreviousState()
-      scroller.delegate = self
-      scroller.dataSource = self
-      reloadScroller()
-      scroller.scrollToView(at: currentAlbumIndex)
-      
-      let undoButton = UIBarButtonItem(barButtonSystemItem: .undo, target: self, action:Selector.undoAction)
-      undoButton.isEnabled = false;
-      let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target:nil, action:nil)
-      let trashButton = UIBarButtonItem(barButtonSystemItem: .trash, target:self, action:Selector.deleteAlbum)
-      let toolbarButtonItems = [undoButton, space, trashButton]
-      toolbar.setItems(toolbarButtonItems, animated: true)
-    }
-    
-    setUI()
-    setData()
-    setComponents()
-    showDataForAlbum(at: currentAlbumIndex)
-    
-    NotificationCenter.default.addObserver(self, selector:Selector.saveCurrentState, name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil)
-	}
   
   func showDataForAlbum(at index: Int) {
     if index < allAlbums.count && index > -1 {
