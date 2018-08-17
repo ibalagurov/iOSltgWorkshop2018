@@ -8,8 +8,11 @@
 
 import XCTest
 
+
 class BlueLibraryUITests: XCTestCase {
     let app = XCUIApplication()
+    let mainScreen = MainScreen()
+
         
     override func setUp() {
         super.setUp()
@@ -20,28 +23,20 @@ class BlueLibraryUITests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        let albumsToolbar = app.toolbars["Albums toolbar"]
-        let undo = albumsToolbar.buttons["Undo"]
-        while undo.isEnabled {
-            undo.tap()
+        while mainScreen.undo.isEnabled {
+            mainScreen.undo.tap()
         }
     }
     
     func testDeleteAlbum() {
-        let scroller = app.otherElements["Albums scroller"]
-        let scrollViews = scroller.scrollViews.otherElements
-        let albumsToolbar = app.toolbars["Albums toolbar"]
-        let delete = albumsToolbar.buttons["Delete"]
-        let undo = albumsToolbar.buttons["Undo"]
+        mainScreen.scrollViews.element(boundBy: 0).tap()
+        XCTAssertEqual(mainScreen.scrollViews.count, 5)
+        XCTAssert(!mainScreen.undo.isEnabled)
         
-        scrollViews.element(boundBy: 0).tap()
-        XCTAssertEqual(scrollViews.count, 4)
-        XCTAssert(!undo.isEnabled)
+        mainScreen.delete.tap()
         
-        delete.tap()
-        
-        XCTAssertEqual(scrollViews.count, 3)
-        XCTAssert(undo.isEnabled)
+        XCTAssertEqual(mainScreen.scrollViews.count, 4)
+        XCTAssert(mainScreen.undo.isEnabled)
     }
     
 }

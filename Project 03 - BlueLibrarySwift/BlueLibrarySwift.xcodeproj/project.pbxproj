@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01318C622125236E004A8A5A /* BlueLibraryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01318C612125236E004A8A5A /* BlueLibraryUITests.swift */; };
+		01318C652127794C004A8A5A /* Screens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01318C642127794C004A8A5A /* Screens.swift */; };
 		0B238FCF1CDD1AAB00000CB5 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B238FCE1CDD1AAB00000CB5 /* Album.swift */; };
 		0B238FD31CDD1DE900000CB5 /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B238FD21CDD1DE900000CB5 /* AlbumView.swift */; };
 		0B238FDD1CDD43CB00000CB5 /* LibraryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B238FDC1CDD43CB00000CB5 /* LibraryAPI.swift */; };
@@ -45,6 +46,7 @@
 		01318C572125227A004A8A5A /* BlueLibrarySwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BlueLibrarySwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		01318C5B2125227A004A8A5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		01318C612125236E004A8A5A /* BlueLibraryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueLibraryUITests.swift; sourceTree = "<group>"; };
+		01318C642127794C004A8A5A /* Screens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screens.swift; sourceTree = "<group>"; };
 		0B238FCE1CDD1AAB00000CB5 /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		0B238FD21CDD1DE900000CB5 /* AlbumView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0B238FDC1CDD43CB00000CB5 /* LibraryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryAPI.swift; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			children = (
 				01318C63212523A0004A8A5A /* Supporting Files */,
 				01318C612125236E004A8A5A /* BlueLibraryUITests.swift */,
+				01318C642127794C004A8A5A /* Screens.swift */,
 			);
 			path = BlueLibrarySwiftUITests;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				01318C622125236E004A8A5A /* BlueLibraryUITests.swift in Sources */,
+				01318C652127794C004A8A5A /* Screens.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
