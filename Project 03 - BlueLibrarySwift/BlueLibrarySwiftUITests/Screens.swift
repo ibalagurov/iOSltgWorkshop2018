@@ -9,7 +9,7 @@
 import XCTest
 
 class MainScreen {
-    var app = XCUIApplication()
+    let app = XCUIApplication()
     
     var scroller: XCUIElement { return app.otherElements["Albums scroller"] }
     var scrollViews: XCUIElementQuery { return scroller.scrollViews.otherElements }

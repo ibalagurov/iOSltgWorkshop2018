@@ -39,4 +39,15 @@ class BlueLibraryUITests: XCTestCase {
         XCTAssert(mainScreen.undo.isEnabled)
     }
     
+    func testSwipeAlbumView() {
+        mainScreen.scroller.swipeRight()
+        XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
+        XCTAssert(!mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        
+        mainScreen.scroller.swipeLeft()
+        
+        XCTAssert(!mainScreen.scrollViews.element(boundBy: 0).isHittable)
+        XCTAssert(mainScreen.scrollViews.element(boundBy: 4).isHittable)
+    }
+    
 }
