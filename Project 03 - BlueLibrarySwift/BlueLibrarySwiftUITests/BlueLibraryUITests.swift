@@ -88,9 +88,12 @@ class BlueLibraryUITests: XCTestCase {
     }
     
     func testAlbumSelection() {
-        mainScreen.scrollViews.element(boundBy: 0).tap()
-        let tableTextElements = mainScreen.app.tables.cells.staticTexts.allElementsBoundByAccessibilityElement
-        let texts = tableTextElements.map({ $0.label })
-        print(texts)
+        mainScreen.scrollViews.element(boundBy: 1).tap()
+        let tableTextElements = mainScreen.albumInfo.cells.allElementsBoundByAccessibilityElement
+        let cellTitleValue = tableTextElements.map({
+            (title: $0.staticTexts["cell_title"].label, value: $0.staticTexts["cell_value"].label)
+        })
+        let artist = cellTitleValue.filter({$0.title == "Artist"})[0].value
+        XCTAssertEqual(artist, "Lady Gaga")
     }
 }
