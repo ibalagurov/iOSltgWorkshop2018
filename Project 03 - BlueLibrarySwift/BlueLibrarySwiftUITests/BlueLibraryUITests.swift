@@ -21,70 +21,103 @@ class BlueLibraryUITests: XCTestCase {
         
         // UI tests spend a lot of time on animations
         UIView.setAnimationsEnabled(false)
-        
-        app.launch()
-        
-        // portrait orientation is default
-        XCUIDevice.shared.orientation = .portrait
+        XCTContext.runActivity(named: "Launch the application") {
+            _ in app.launch()
+            // portrait orientation is default
+            XCUIDevice.shared.orientation = .portrait
+        }
     }
     
     override func tearDown() {
         super.tearDown()
-        while mainScreen.undo.isEnabled {
-            mainScreen.undo.tap()
+        XCTContext.runActivity(named: "Drop state and close application") { _ in
+            while mainScreen.undo.isEnabled {
+                mainScreen.undo.tap()
+            }
+            app.terminate()
         }
     }
     
     func testDeleteAlbum() {
-        XCTAssertEqual(mainScreen.scrollViews.count, 5)
-        XCTAssert(!mainScreen.undo.isEnabled)
+        XCTContext.runActivity(named: "There are 5 albums and undo button is disabled") { _ in
+            XCTAssertEqual(mainScreen.scrollViews.count, 5)
+            XCTAssert(!mainScreen.undo.isEnabled)
+        }
         
-        mainScreen.delete.tap()
+        XCTContext.runActivity(named: "Delete selected album") { _ in
+            mainScreen.delete.tap()
+        }
         
-        XCTAssertEqual(mainScreen.scrollViews.count, 4)
-        XCTAssert(mainScreen.undo.isEnabled)
+        XCTContext.runActivity(named: "There are should be 4 albums and undo button should be enabled") { _ in
+            XCTAssertEqual(mainScreen.scrollViews.count, 4)
+            XCTAssert(mainScreen.undo.isEnabled)
+        }
     }
     
     func testDeleteAllAlbums() {
-        XCTAssertEqual(mainScreen.scrollViews.count, 5)
+        XCTContext.runActivity(named: "There are 5 albums") { _ in
+            XCTAssertEqual(mainScreen.scrollViews.count, 5)
+        }
         
-        for _ in 1...5 { mainScreen.delete.tap() }
+        XCTContext.runActivity(named: "Delete all albums") { _ in
+            for _ in 1...5 { mainScreen.delete.tap() }
+        }
         
-        XCTAssertEqual(mainScreen.scrollViews.count, 0)
-        XCTAssert(mainScreen.undo.isEnabled)
-        XCTAssert(!mainScreen.delete.isEnabled)
+        XCTContext.runActivity(named: "Shouldn't be any albums, undo button is enabled and delete button is disabled") { _ in
+            XCTAssertEqual(mainScreen.scrollViews.count, 0)
+            XCTAssert(mainScreen.undo.isEnabled)
+            XCTAssert(!mainScreen.delete.isEnabled)
+        }
     }
     
     func testUndoAlbumDeletion() {
-        mainScreen.delete.tap()
-        XCTAssertEqual(mainScreen.scrollViews.count, 4)
+        XCTContext.runActivity(named: "There are 4 albums and one was deleted") { _ in
+            mainScreen.delete.tap()
+            XCTAssertEqual(mainScreen.scrollViews.count, 4)
+        }
         
-        mainScreen.undo.tap()
+        XCTContext.runActivity(named: "Undo deletion") { _ in
+            mainScreen.undo.tap()
+        }
         
-        XCTAssertEqual(mainScreen.scrollViews.count, 5)
-        XCTAssert(!mainScreen.undo.isEnabled)
+        XCTContext.runActivity(named: "Should be 5 albums and undo button is disabled") { _ in
+            XCTAssertEqual(mainScreen.scrollViews.count, 5)
+            XCTAssert(!mainScreen.undo.isEnabled)
+        }
     }
     
     func testSwipeAlbumView() {
-        mainScreen.scroller.swipeRight()
-        XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
-        XCTAssert(!mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        XCTContext.runActivity(named: "There are 5 albums: first is visible, last isn't visible") { _ in
+            mainScreen.scroller.swipeRight()
+            XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
+            XCTAssert(!mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        }
         
-        mainScreen.scroller.swipeLeft()
+        XCTContext.runActivity(named: "Scroll albums to the end of the list") { _ in
+            mainScreen.scroller.swipeLeft()
+        }
         
-        XCTAssert(!mainScreen.scrollViews.element(boundBy: 0).isHittable)
-        XCTAssert(mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        XCTContext.runActivity(named: "First album shouldn't be visible, the last one last is visible") { _ in
+            XCTAssert(!mainScreen.scrollViews.element(boundBy: 0).isHittable)
+            XCTAssert(mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        }
     }
     
     func testLandscapeOrientation() {
-        mainScreen.scroller.swipeRight()
-        XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
-        XCTAssert(!mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        XCTContext.runActivity(named: "There are 5 albums: first is visible, last isn't visible") { _ in
+            mainScreen.scroller.swipeRight()
+            XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
+            XCTAssert(!mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        }
         
-        XCUIDevice.shared.orientation = .landscapeRight
+        XCTContext.runActivity(named: "Change device orientation to landscape") { _ in
+            XCUIDevice.shared.orientation = .landscapeRight
+        }
         
-        XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
-        XCTAssert(mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        XCTContext.runActivity(named: "First and last albums should be visible") { _ in
+            XCTAssert(mainScreen.scrollViews.element(boundBy: 0).isHittable)
+            XCTAssert(mainScreen.scrollViews.element(boundBy: 4).isHittable)
+        }
     }
     
     func testAlbumSelection() {
