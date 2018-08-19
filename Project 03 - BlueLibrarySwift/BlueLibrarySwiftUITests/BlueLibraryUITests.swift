@@ -121,12 +121,37 @@ class BlueLibraryUITests: XCTestCase {
     }
     
     func testAlbumSelection() {
-        mainScreen.scrollViews.element(boundBy: 1).tap()
-        let tableTextElements = mainScreen.albumInfo.cells.allElementsBoundByAccessibilityElement
-        let cellTitleValue = tableTextElements.map({
-            (title: $0.staticTexts["cell_title"].label, value: $0.staticTexts["cell_value"].label)
-        })
-        let artist = cellTitleValue.filter({$0.title == "Artist"})[0].value
-        XCTAssertEqual(artist, "Lady Gaga")
+        XCTContext.runActivity(named: "Select 'Lady Gaga' album") { _ in
+            mainScreen.selectAlbumWithIndex(index: 1)
+        }
+        
+        XCTContext.runActivity(named: "Album should be 'Poker Face'") { _ in
+            let album = mainScreen.rowValueByTitle(title: "Album")
+            XCTAssertEqual(album, "Poker Face")
+        }
+        
+        XCTContext.runActivity(named: "Select 'U2' album") { _ in
+            mainScreen.selectAlbumWithIndex(index: 3)
+        }
+        
+        XCTContext.runActivity(named: "Album should be 'Staring at the Sun'") { _ in
+            let album = mainScreen.rowValueByTitle(title: "Album")
+            XCTAssertEqual(album, "Staring at the Sun")
+        }
+    }
+    
+    func testAlbumInformation() {
+        XCTContext.runActivity(named: "Select 'Linked Park' album") { _ in
+            mainScreen.selectAlbumWithIndex(index: 4)
+        }
+        
+        XCTContext.runActivity(named: "Check all album information fields") { _ in
+            let tableRows = mainScreen.tableTexts()
+            let expectedRows = ["Album": "Iridescent", "Artist": "Linkin Park", "Year": "2000", "Genre": "Pop"]
+            for (title, value) in tableRows {
+                XCTAssertEqual(expectedRows[title], value)
+            }
+        }
+        
     }
 }
