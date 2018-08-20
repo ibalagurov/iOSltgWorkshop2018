@@ -8,12 +8,10 @@
 
 import XCTest
 
-
 class BlueLibraryUITests: XCTestCase {
     let app = XCUIApplication()
     let mainScreen = MainScreen()
 
-        
     override func setUp() {
         super.setUp()
         XCTContext.runActivity(named: "Launch the application") { _ in
@@ -32,10 +30,12 @@ class BlueLibraryUITests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+        
         XCTContext.runActivity(named: "Drop state and close the application") { _ in
             while mainScreen.undo.isEnabled {
                 mainScreen.undo.tap()
             }
+            
             app.terminate()
         }
     }
@@ -154,6 +154,5 @@ class BlueLibraryUITests: XCTestCase {
                 XCTAssertEqual(expectedRows[title], value)
             }
         }
-        
     }
 }

@@ -32,7 +32,7 @@ class MainScreen {
         element.tap()
     }
     
-    func tableTexts() -> [(title: String, value: String)]{
+    func tableTexts() -> [(title: String, value: String)] {
         let exists = albumInfo.waitForExistence(timeout: defaultTimeout)
         XCTAssert(exists)
         let cellTitleValue = tableTextElements.map({
