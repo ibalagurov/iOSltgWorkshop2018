@@ -12,27 +12,29 @@ class MainScreen {
     let app = XCUIApplication()
     let defaultTimeout: TimeInterval = 10
     
-    var scroller: XCUIElement { return app.otherElements["Albums scroller"] }
-    var scrollViews: XCUIElementQuery { return scroller.scrollViews.otherElements }
-    var albumsToolbar: XCUIElement { return app.toolbars["Albums toolbar"] }
-    var albumInfo: XCUIElement { return app.tables["Albums information"] }
-    var delete: XCUIElement { return albumsToolbar.buttons["Delete"] }
-    var undo: XCUIElement { return albumsToolbar.buttons["Undo"] }
+    var scroller: XCUIElement { return app.otherElements["albums_scroller"] }
+    var albumsList: XCUIElementQuery { return scroller.scrollViews.otherElements }
+    var toolbar: XCUIElement { return app.toolbars["albums_toolbar"] }
+    var albumInfo: XCUIElement { return app.tables["album_info"] }
+    var delete: XCUIElement { return toolbar.buttons["Delete"] }
+    var undo: XCUIElement { return toolbar.buttons["Undo"] }
     var tableTextElements: [XCUIElement] { return albumInfo.cells.allElementsBoundByAccessibilityElement }
     
     func albumWithIndex(index: Int) -> XCUIElement {
-        let element = scrollViews.element(boundBy: index)
+        let element = albumsList.element(boundBy: index)
+        let exists = element.waitForExistence(timeout: defaultTimeout)
+        XCTAssert(exists)
         return element
     }
     
     func selectAlbumWithIndex(index: Int) -> Void {
         let element = albumWithIndex(index: index)
-        let exists = element.waitForExistence(timeout: defaultTimeout)
-        XCTAssert(exists)
         element.tap()
     }
     
     func tableTexts() -> [(title: String, value: String)]{
+        let exists = albumInfo.waitForExistence(timeout: defaultTimeout)
+        XCTAssert(exists)
         let cellTitleValue = tableTextElements.map({
             (title: $0.staticTexts["cell_title"].label, value: $0.staticTexts["cell_value"].label)
         })

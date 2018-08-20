@@ -66,9 +66,9 @@ class ViewController: UIViewController {
         }
         
         func addAccessibilityIdentifiers() {
-          dataTable.accessibilityIdentifier = "Albums information"
-          toolbar.accessibilityIdentifier = "Albums toolbar"
-          scroller.accessibilityIdentifier = "Albums scroller"
+          dataTable.accessibilityIdentifier = "album_info"
+          toolbar.accessibilityIdentifier = "albums_toolbar"
+          scroller.accessibilityIdentifier = "albums_scroller"
         }
             
         addAccessibilityIdentifiers()
